@@ -1,0 +1,116 @@
+[
+  {
+    "model_name": "Logistic Regression",
+    "accuracy": 98.25,
+    "precision": 98.31,
+    "recall": 98.17,
+    "f1_score": 98.23,
+    "per_class": {
+      "real_news": {
+        "precision": 97.6,
+        "recall": 99.19,
+        "f1_score": 98.39,
+        "support": 4179
+      },
+      "fake_news": {
+        "precision": 99.03,
+        "recall": 97.15,
+        "f1_score": 98.08,
+        "support": 3578
+      }
+    },
+    "confusion_matrix": {
+      "true_real_pred_real": 4145,
+      "true_real_pred_fake": 34,
+      "true_fake_pred_real": 102,
+      "true_fake_pred_fake": 3476,
+      "matrix": [
+        [
+          4145,
+          34
+        ],
+        [
+          102,
+          3476
+        ]
+      ]
+    },
+    "training_time_seconds": 0.2
+  },
+  {
+    "model_name": "Multinomial Naive Bayes",
+    "accuracy": 93.53,
+    "precision": 93.53,
+    "recall": 93.45,
+    "f1_score": 93.48,
+    "per_class": {
+      "real_news": {
+        "precision": 93.54,
+        "recall": 94.52,
+        "f1_score": 94.03,
+        "support": 4179
+      },
+      "fake_news": {
+        "precision": 93.52,
+        "recall": 92.37,
+        "f1_score": 92.94,
+        "support": 3578
+      }
+    },
+    "confusion_matrix": {
+      "true_real_pred_real": 3950,
+      "true_real_pred_fake": 229,
+      "true_fake_pred_real": 273,
+      "true_fake_pred_fake": 3305,
+      "matrix": [
+        [
+          3950,
+          229
+        ],
+        [
+          273,
+          3305
+        ]
+      ]
+    },
+    "training_time_seconds": 0.025
+  },
+  {
+    "model_name": "Linear SVM",
+    "accuracy": 97.6,
+    "precision": 97.71,
+    "recall": 97.49,
+    "f1_score": 97.58,
+    "per_class": {
+      "real_news": {
+        "precision": 96.64,
+        "recall": 98.99,
+        "f1_score": 97.8,
+        "support": 4179
+      },
+      "fake_news": {
+        "precision": 98.79,
+        "recall": 95.98,
+        "f1_score": 97.36,
+        "support": 3578
+      }
+    },
+    "confusion_matrix": {
+      "true_real_pred_real": 4137,
+      "true_real_pred_fake": 42,
+      "true_fake_pred_real": 144,
+      "true_fake_pred_fake": 3434,
+      "matrix": [
+        [
+          4137,
+          42
+        ],
+        [
+          144,
+          3434
+        ]
+      ]
+    },
+    "training_time_seconds": 0.231
+  }
+]

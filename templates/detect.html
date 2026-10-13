@@ -1,0 +1,257 @@
+{% extends "base.html" %}
+
+{% block title %}Detect News | Fake News Detection Using NLP{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <!-- Page Header -->
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+            <div>
+                <div class="badge-pill mb-2">
+                    <span class="badge-pill-dot"></span>
+                    <span>Interactive Inference Console</span>
+                </div>
+                <h1 class="h2 fw-bold text-white mb-1">Analyze News Headline or Article</h1>
+                <p class="text-secondary small mb-0">
+                    Input a headline, the body of an article, or both. The NLP model evaluates lexical features, attribution syntax, and sensationalism markers.
+                </p>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-soft-cyan text-cyan py-2 px-3 border border-cyan-subtle">
+                    <i class="fa-solid fa-server me-1"></i> Model: Logistic Regression
+                </span>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Left Column: Input Form & Sample Selector -->
+            <div class="col-lg-7">
+                <div class="glass-card p-4 rounded-4 shadow-xl mb-4">
+                    <!-- Quick Sample News Buttons -->
+                    <div class="mb-4">
+                        <label class="form-label text-secondary small fw-semibold d-flex justify-content-between align-items-center">
+                            <span><i class="fa-solid fa-vial-circle-check text-cyan me-1"></i> Quick Test Demonstration Samples:</span>
+                            <span class="smaller text-muted">Click to auto-populate</span>
+                        </label>
+                        <div class="d-flex flex-wrap gap-2">
+                            <button type="button" class="btn btn-sample-real btn-sm sample-btn" data-sample="real-1">
+                                <i class="fa-solid fa-check text-green me-1"></i> Real: Climate Accord
+                            </button>
+                            <button type="button" class="btn btn-sample-real btn-sm sample-btn" data-sample="real-2">
+                                <i class="fa-solid fa-check text-green me-1"></i> Real: Mars Rover Discovery
+                            </button>
+                            <button type="button" class="btn btn-sample-fake btn-sm sample-btn" data-sample="fake-1">
+                                <i class="fa-solid fa-triangle-exclamation text-danger me-1"></i> Fake: Miracle Plant Cure
+                            </button>
+                            <button type="button" class="btn btn-sample-fake btn-sm sample-btn" data-sample="fake-2">
+                                <i class="fa-solid fa-triangle-exclamation text-danger me-1"></i> Fake: Secret Alien Infiltration
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Input Form -->
+                    <form id="detectForm">
+                        <!-- Headline Input -->
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <label for="headlineInput" class="form-label text-white small fw-bold mb-0">
+                                    <i class="fa-solid fa-heading text-cyan me-1"></i> News Headline <span class="text-secondary fw-normal">(Optional if article provided)</span>
+                                </label>
+                                <span class="text-secondary smaller" id="headlineCounter">0 / 300</span>
+                            </div>
+                            <input type="text" class="form-control form-control-dark" id="headlineInput" placeholder="Enter or paste news headline here..." maxlength="300">
+                        </div>
+
+                        <!-- Full Article Textarea -->
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <label for="articleInput" class="form-label text-white small fw-bold mb-0">
+                                    <i class="fa-solid fa-newspaper text-cyan me-1"></i> Full Article Body <span class="text-secondary fw-normal">(Optional if headline provided)</span>
+                                </label>
+                                <span class="text-secondary smaller" id="articleCounter">0 / 25,000</span>
+                            </div>
+                            <textarea class="form-control form-control-dark font-monospace-preview" id="articleInput" rows="7" placeholder="Enter or paste full news article body text here..." maxlength="25000"></textarea>
+                        </div>
+
+                        <!-- Input Mode Indicator -->
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="text-secondary smaller">Detected Mode:</span>
+                                <span class="badge bg-dark-subtle text-light border border-subtle" id="modeBadge">Waiting for input</span>
+                            </div>
+                            <button type="button" class="btn btn-link text-secondary btn-sm text-decoration-none p-0" id="clearBtn">
+                                <i class="fa-solid fa-trash-can me-1"></i> Clear Form
+                            </button>
+                        </div>
+
+                        <!-- Error Alert Container -->
+                        <div class="alert alert-danger d-none py-2 px-3 small rounded-3" id="errorAlert" role="alert">
+                            <i class="fa-solid fa-circle-exclamation me-1"></i> <span id="errorMessage">Error text</span>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex gap-3">
+                            <button type="submit" class="btn btn-primary-gradient px-4 py-2 fw-bold flex-grow-1 shadow-md" id="submitBtn">
+                                <span class="btn-text">
+                                    <i class="fa-solid fa-wand-magic-sparkles me-2"></i> Analyze with NLP Model
+                                </span>
+                                <span class="btn-spinner d-none">
+                                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                    Extracting TF-IDF Features...
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Input Guidelines Notice -->
+                <div class="p-3 rounded-3 bg-card-subtle border border-subtle">
+                    <div class="d-flex gap-2">
+                        <i class="fa-solid fa-circle-info text-cyan mt-1"></i>
+                        <div class="small text-secondary">
+                            <strong class="text-white">Analysis Tips:</strong>
+                            Input longer articles for maximum reliability. The model inspects unigrams and bigrams, word choice, official source citations (e.g. "said", "spokesperson", "statement"), and clickbait exaggerations.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Real-Time Results & Explainability Display -->
+            <div class="col-lg-5">
+                <!-- Placeholder / Initial State Card -->
+                <div class="glass-card p-4 rounded-4 shadow-xl text-center py-5" id="resultsPlaceholder">
+                    <div class="empty-state-icon mx-auto mb-3 text-secondary">
+                        <i class="fa-solid fa-microchip fs-1"></i>
+                    </div>
+                    <h5 class="text-white fw-bold mb-2">Awaiting News Input</h5>
+                    <p class="text-secondary small mb-4 px-3">
+                        Enter a headline or article on the left and click <strong>Analyze with NLP Model</strong> to inspect class probabilities, explainability tokens, and lexical metrics.
+                    </p>
+                    <div class="d-inline-flex align-items-center gap-2 p-2 px-3 rounded-pill bg-dark-subtle border border-dark-subtle text-muted small">
+                        <i class="fa-solid fa-circle-play text-cyan"></i> Or select a test sample above
+                    </div>
+                </div>
+
+                <!-- Active Result Display Container (Hidden Initially) -->
+                <div class="glass-card p-4 rounded-4 shadow-xl d-none" id="resultsContainer">
+                    <!-- Result Status Banner -->
+                    <div class="p-3 rounded-4 mb-4 result-banner" id="resultBanner">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="result-badge-icon" id="resultIcon">
+                                <i class="fa-solid fa-shield-check"></i>
+                            </div>
+                            <div>
+                                <span class="smaller text-uppercase fw-bold letter-spacing text-muted-label" id="resultTag">PREDICTION OUTCOME</span>
+                                <h3 class="fw-extrabold mb-0" id="resultTitle">Likely Real News</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Confidence Gauge & Probabilities -->
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="small fw-bold text-white">Model Confidence</span>
+                            <span class="fw-extrabold fs-5 text-cyan" id="confidenceValue">98.4%</span>
+                        </div>
+                        
+                        <!-- Dual Probability Comparison Bar -->
+                        <div class="progress-stacked mb-2" style="height: 12px; border-radius: 6px; overflow: hidden; background-color: #1f2937;">
+                            <div class="progress" role="progressbar" style="width: 50%" id="realProbBar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar bg-success"></div>
+                            </div>
+                            <div class="progress" role="progressbar" style="width: 50%" id="fakeProbBar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar bg-danger"></div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between small text-secondary">
+                            <span><i class="fa-solid fa-circle text-success me-1"></i> Real: <strong class="text-white" id="realProbText">50%</strong></span>
+                            <span><i class="fa-solid fa-circle text-danger me-1"></i> Fake: <strong class="text-white" id="fakeProbText">50%</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Analysis Summary -->
+                    <div class="p-3 rounded-3 bg-dark-subtle mb-4">
+                        <div class="text-secondary smaller fw-bold mb-1">MODEL INTERPRETATION:</div>
+                        <p class="text-light small mb-0" id="analysisSummary">
+                            Summary text goes here.
+                        </p>
+                    </div>
+
+                    <!-- Feature Explainability Tokens (Local Attribution) -->
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="small fw-bold text-white">
+                                <i class="fa-solid fa-fingerprint text-cyan me-1"></i> Top Influencing Words / Phrases:
+                            </span>
+                            <span class="smaller text-secondary">TF-IDF &times; Weights</span>
+                        </div>
+
+                        <!-- Fake Indicators (Positive Weights) -->
+                        <div class="mb-2" id="fakeIndicatorsWrapper">
+                            <div class="smaller text-danger fw-semibold mb-1">
+                                <i class="fa-solid fa-arrow-trend-up me-1"></i> Pushing Toward Fake News:
+                            </div>
+                            <div class="d-flex flex-wrap gap-1" id="fakeIndicatorsList">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Real Indicators (Negative Weights) -->
+                        <div id="realIndicatorsWrapper">
+                            <div class="smaller text-success fw-semibold mb-1">
+                                <i class="fa-solid fa-arrow-trend-down me-1"></i> Pushing Toward Real News:
+                            </div>
+                            <div class="d-flex flex-wrap gap-1" id="realIndicatorsList">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Linguistic Statistics Grid -->
+                    <div class="mb-4">
+                        <div class="small fw-bold text-white mb-2">
+                            <i class="fa-solid fa-chart-simple text-cyan me-1"></i> Text & Lexical Metrics:
+                        </div>
+                        <div class="row g-2 text-center">
+                            <div class="col-4">
+                                <div class="p-2 rounded-2 bg-card-subtle">
+                                    <div class="text-white fw-bold small" id="statWords">0</div>
+                                    <div class="smaller text-secondary">Words</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="p-2 rounded-2 bg-card-subtle">
+                                    <div class="text-white fw-bold small" id="statSentences">0</div>
+                                    <div class="smaller text-secondary">Sentences</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="p-2 rounded-2 bg-card-subtle">
+                                    <div class="text-white fw-bold small" id="statDiversity">0%</div>
+                                    <div class="smaller text-secondary">Lexical Richness</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Academic Disclaimer -->
+                    <div class="p-3 rounded-3 bg-card-subtle border border-subtle">
+                        <div class="d-flex gap-2">
+                            <i class="fa-solid fa-triangle-exclamation text-warning mt-1"></i>
+                            <div class="smaller text-secondary" id="disclaimerText">
+                                Statistical estimate produced by trained TF-IDF & Logistic Regression NLP classifier. Does not replace manual journalistic verification.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/detect.js') }}"></script>
+{% endblock %}

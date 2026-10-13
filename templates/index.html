@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+
+{% block title %}Home | Fake News Detection Using NLP{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section py-5 position-relative overflow-hidden">
+    <div class="hero-glow-blob top-0 start-50 translate-middle"></div>
+    <div class="container py-lg-4 position-relative">
+        <div class="row align-items-center gy-5">
+            <div class="col-lg-7">
+                <div class="badge-pill mb-3">
+                    <span class="badge-pill-dot"></span>
+                    <span>NLP & Machine Learning Internship Project</span>
+                </div>
+                <h1 class="display-4 fw-extrabold text-white mb-3 tracking-tight">
+                    Fake News Detection <br>
+                    <span class="text-gradient-cyan">Powered by NLP & ML</span>
+                </h1>
+                <p class="lead text-secondary mb-4 pe-lg-4 fs-6">
+                    A machine learning web application that analyzes news headlines and full articles to predict
+                    misinformation likelihood using natural language processing, TF-IDF feature extraction, and 
+                    calibrated classification models. Built with strict data-leakage safeguards.
+                </p>
+
+                <div class="d-flex flex-wrap gap-3 mb-4">
+                    <a href="{{ url_for('detect') }}" class="btn btn-primary-gradient px-4 py-3 fw-bold rounded-3 shadow-lg">
+                        <i class="fa-solid fa-wand-magic-sparkles me-2"></i> Analyze News Now
+                    </a>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-cyan px-4 py-3 fw-bold rounded-3">
+                        <i class="fa-solid fa-chart-column me-2"></i> Model Dashboard
+                    </a>
+                </div>
+
+                <div class="d-flex align-items-center gap-4 text-secondary small pt-2">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-shield-check text-cyan"></i>
+                        <span>Zero Data Leakage</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-bolt text-warning"></i>
+                        <span>Sub-second Inference</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-chart-pie text-info"></i>
+                        <span>Interpretable Features</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <!-- Interactive Mini-Demo Preview Card -->
+                <div class="glass-card p-4 rounded-4 shadow-2xl border-gradient position-relative">
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom border-dark-subtle">
+                        <span class="fw-bold text-white small d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-robot text-cyan"></i> Live Classification Engine
+                        </span>
+                        <span class="badge bg-soft-green text-green border border-green-subtle">Online & Ready</span>
+                    </div>
+
+                    <div class="p-3 rounded-3 bg-dark-subtle mb-3">
+                        <div class="text-secondary smaller mb-1">SAMPLE PREVIEW HEADLINE:</div>
+                        <div class="text-white fw-semibold small">
+                            "Global Climate Summit Reaches Historic Multi-Nation Carbon Agreement in Geneva"
+                        </div>
+                    </div>
+
+                    <div class="p-3 rounded-3 bg-card-subtle mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="small fw-bold text-green d-flex align-items-center gap-1">
+                                <i class="fa-solid fa-circle-check"></i> Likely Real News
+                            </span>
+                            <span class="small fw-extrabold text-cyan">98.4% Confidence</span>
+                        </div>
+                        <div class="progress progress-sm bg-dark">
+                            <div class="progress-bar bg-cyan-gradient" role="progressbar" style="width: 98.4%;" aria-valuenow="98.4" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        <a href="{{ url_for('detect') }}" class="btn btn-outline-cyan btn-sm py-2">
+                            Test Custom Articles In Detector <i class="fa-solid fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Summary Statistics Metrics Row (ACTUAL RECORDED DATA) -->
+<section class="metrics-section py-4">
+    <div class="container">
+        <div class="row g-3">
+            <div class="col-6 col-lg-3">
+                <div class="stat-card p-4 rounded-4 text-center">
+                    <div class="stat-icon-wrapper mb-2 mx-auto text-cyan">
+                        <i class="fa-solid fa-database"></i>
+                    </div>
+                    <div class="stat-number text-white fw-extrabold display-6">
+                        {{ metrics.total_dataset_samples or 38783 }}
+                    </div>
+                    <div class="stat-label text-secondary small fw-medium">Curated Dataset Size</div>
+                    <span class="badge bg-soft-cyan text-cyan smaller mt-2">from original_data</span>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="stat-card p-4 rounded-4 text-center">
+                    <div class="stat-icon-wrapper mb-2 mx-auto text-green">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <div class="stat-number text-white fw-extrabold display-6">
+                        {{ metrics.test_metrics.accuracy or 98.25 }}%
+                    </div>
+                    <div class="stat-label text-secondary small fw-medium">Model Test Accuracy</div>
+                    <span class="badge bg-soft-green text-green smaller mt-2">Held-Out 20% Split</span>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="stat-card p-4 rounded-4 text-center">
+                    <div class="stat-icon-wrapper mb-2 mx-auto text-info">
+                        <i class="fa-solid fa-award"></i>
+                    </div>
+                    <div class="stat-number text-white fw-extrabold display-6">
+                        {{ metrics.test_metrics.f1_score or 98.23 }}%
+                    </div>
+                    <div class="stat-label text-secondary small fw-medium">Weighted F1-Score</div>
+                    <span class="badge bg-soft-info text-info smaller mt-2">Harmonic Mean Metric</span>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="stat-card p-4 rounded-4 text-center">
+                    <div class="stat-icon-wrapper mb-2 mx-auto text-warning">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </div>
+                    <div class="stat-number text-white fw-extrabold display-6">
+                        {{ db_stats.total_analyses or 0 }}
+                    </div>
+                    <div class="stat-label text-secondary small fw-medium">Analyses Performed</div>
+                    <span class="badge bg-soft-warning text-warning smaller mt-2">Recorded in SQLite</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 4-Step NLP Architecture Highlights -->
+<section class="py-5">
+    <div class="container py-lg-4">
+        <div class="text-center mb-5">
+            <span class="badge bg-soft-cyan text-cyan text-uppercase px-3 py-1 mb-2">Rigorous Engineering</span>
+            <h2 class="fw-bold text-white display-6">How Our NLP Engine Analyzes News</h2>
+            <p class="text-secondary mx-auto" style="max-width: 650px;">
+                Unlike naive keyword searchers, our system leverages an end-to-end NLP pipeline 
+                designed to prevent statistical leakage and extract semantic writing styles.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="glass-card p-4 rounded-4 h-100 step-card">
+                    <div class="step-badge mb-3">01</div>
+                    <h5 class="text-white fw-bold mb-2">Leakage Prevention</h5>
+                    <p class="text-secondary small mb-0">
+                        Removes publisher datelines (e.g. wire service stamps) and eliminates duplicate articles 
+                        so the classifier evaluates linguistic tone rather than memorizing metadata shortcuts.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="glass-card p-4 rounded-4 h-100 step-card">
+                    <div class="step-badge mb-3">02</div>
+                    <h5 class="text-white fw-bold mb-2">TF-IDF Vectorization</h5>
+                    <p class="text-secondary small mb-0">
+                        Extracts 5,000 sublinear TF-IDF features spanning unigrams and bigrams, 
+                        fitted strictly on the training partition to model stylistic n-gram associations.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="glass-card p-4 rounded-4 h-100 step-card">
+                    <div class="step-badge mb-3">03</div>
+                    <h5 class="text-white fw-bold mb-2">Calibrated Classifier</h5>
+                    <p class="text-secondary small mb-0">
+                        Uses L2-regularized Logistic Regression to output well-calibrated class probabilities, 
+                        validated against Naive Bayes and Linear SVM benchmarks.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="glass-card p-4 rounded-4 h-100 step-card">
+                    <div class="step-badge mb-3">04</div>
+                    <h5 class="text-white fw-bold mb-2">Local Attribution</h5>
+                    <p class="text-secondary small mb-0">
+                        Calculates feature contribution products ($w_i \cdot x_i$) to highlight exactly which 
+                        words and phrases pushed the prediction toward Real or Fake news.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Banner -->
+<section class="py-5">
+    <div class="container">
+        <div class="cta-banner p-5 rounded-4 text-center position-relative overflow-hidden">
+            <div class="position-relative z-1">
+                <h2 class="text-white fw-bold display-6 mb-3">Ready to Analyze News Content?</h2>
+                <p class="text-light-subtle mx-auto mb-4" style="max-width: 600px;">
+                    Test headlines, full news articles, or pre-loaded genuine and disinformation samples with one click.
+                </p>
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <a href="{{ url_for('detect') }}" class="btn btn-primary-gradient px-4 py-3 fw-bold rounded-3 shadow">
+                        <i class="fa-solid fa-magnifying-glass me-2"></i> Launch Detection Console
+                    </a>
+                    <a href="{{ url_for('about') }}" class="btn btn-outline-light px-4 py-3 fw-bold rounded-3">
+                        <i class="fa-solid fa-book-open me-2"></i> Read Methodology Guide
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,184 @@
+{
+  "trained_at": "2026-10-12 19:57:59",
+  "primary_model_name": "Logistic Regression",
+  "dataset_source": "original_data (Fake.csv & True.csv)",
+  "total_dataset_samples": 38783,
+  "raw_dataset_rows": 44898,
+  "train_samples": 31026,
+  "test_samples": 7757,
+  "real_samples_total": 20893,
+  "fake_samples_total": 17890,
+  "real_samples_train": 16714,
+  "fake_samples_train": 14312,
+  "real_samples_test": 4179,
+  "fake_samples_test": 3578,
+  "vocabulary_size": 5000,
+  "ngram_range": [
+    1,
+    1
+  ],
+  "test_metrics": {
+    "model_name": "Logistic Regression",
+    "accuracy": 98.25,
+    "precision": 98.31,
+    "recall": 98.17,
+    "f1_score": 98.23,
+    "per_class": {
+      "real_news": {
+        "precision": 97.6,
+        "recall": 99.19,
+        "f1_score": 98.39,
+        "support": 4179
+      },
+      "fake_news": {
+        "precision": 99.03,
+        "recall": 97.15,
+        "f1_score": 98.08,
+        "support": 3578
+      }
+    },
+    "confusion_matrix": {
+      "true_real_pred_real": 4145,
+      "true_real_pred_fake": 34,
+      "true_fake_pred_real": 102,
+      "true_fake_pred_fake": 3476,
+      "matrix": [
+        [
+          4145,
+          34
+        ],
+        [
+          102,
+          3476
+        ]
+      ]
+    },
+    "training_time_seconds": 0.2
+  },
+  "top_features": {
+    "fake_indicators": [
+      {
+        "word": "video",
+        "weight": 12.1652
+      },
+      {
+        "word": "read",
+        "weight": 8.986
+      },
+      {
+        "word": "featured",
+        "weight": 8.7948
+      },
+      {
+        "word": "image",
+        "weight": 8.793
+      },
+      {
+        "word": "gop",
+        "weight": 8.0065
+      },
+      {
+        "word": "just",
+        "weight": 7.4567
+      },
+      {
+        "word": "getty",
+        "weight": 6.3658
+      },
+      {
+        "word": "breaking",
+        "weight": 6.0328
+      },
+      {
+        "word": "watch",
+        "weight": 5.8716
+      },
+      {
+        "word": "obama",
+        "weight": 5.6579
+      },
+      {
+        "word": "wire",
+        "weight": 5.6209
+      },
+      {
+        "word": "sen",
+        "weight": 5.4917
+      },
+      {
+        "word": "com",
+        "weight": 5.4536
+      },
+      {
+        "word": "mr",
+        "weight": 5.2782
+      },
+      {
+        "word": "america",
+        "weight": 5.227
+      }
+    ],
+    "real_indicators": [
+      {
+        "word": "said",
+        "weight": 17.5135
+      },
+      {
+        "word": "wednesday",
+        "weight": 6.7265
+      },
+      {
+        "word": "tuesday",
+        "weight": 6.6852
+      },
+      {
+        "word": "thursday",
+        "weight": 6.095
+      },
+      {
+        "word": "republican",
+        "weight": 5.6191
+      },
+      {
+        "word": "nov",
+        "weight": 5.4454
+      },
+      {
+        "word": "friday",
+        "weight": 5.212
+      },
+      {
+        "word": "monday",
+        "weight": 4.9282
+      },
+      {
+        "word": "presidential",
+        "weight": 4.1413
+      },
+      {
+        "word": "reporters",
+        "weight": 4.0407
+      },
+      {
+        "word": "spokesman",
+        "weight": 3.8989
+      },
+      {
+        "word": "democratic",
+        "weight": 3.7273
+      },
+      {
+        "word": "minister",
+        "weight": 3.7024
+      },
+      {
+        "word": "barack",
+        "weight": 3.5483
+      },
+      {
+        "word": "representatives",
+        "weight": 3.4883
+      }
+    ]
+  }
+}
